@@ -108,12 +108,14 @@ export default function Home() {
     );
   });
 
-  const maxSigma = createMemo(() => {
-    return list().reduce((acc, item) => Math.max(acc, item.rating.sigma), 0);
+  createEffect(() => {
+    console.log("averageSigma", averageSigma());
   });
 
+  const initialSigma = new Rating().sigma;
+
   const confidenceScore = createMemo(() => {
-    return (1 - averageSigma() / maxSigma()) * 100;
+    return (1 - averageSigma() / initialSigma) * 100;
   });
 
   function saveRankings() {
@@ -234,13 +236,19 @@ export default function Home() {
           <tr>
             <td>{index + 1}.</td>
             <td>{item.name}</td>
-            <td class="px-2">
+            <td className="px-2">
               <button class="text-red-500" onClick={removeItem(index)}>
                 X
               </button>
             </td>
-            <td class="px-4">mu={item.rating.mu.toFixed(2)}</td>
-            <td class="px-4">sigma={item.rating.sigma.toFixed(2)}</td>
+            <td className="px-4">mu={item.rating.mu.toFixed(2)}</td>
+            <td className="px-4">sigma={item.rating.sigma.toFixed(2)}</td>
+            <td className="px-4">
+              {(
+                (100 * (sortedList().length - index)) /
+                sortedList().length
+              ).toFixed(0)}
+            </td>
           </tr>
         ))}
       </table>
