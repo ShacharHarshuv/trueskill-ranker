@@ -26,7 +26,10 @@ export default function Home() {
   });
 
   function getQuality(item1: Item, item2: Item) {
-    return quality_1vs1(item1.rating, item2.rating);
+    return (
+      (item1.rating.sigma + item2.rating.sigma) /
+      (1 + Math.abs(item1.rating.mu - item2.rating.mu))
+    );
   }
 
   function pickMatch() {
@@ -144,6 +147,33 @@ export default function Home() {
     input.click();
   }
 
+  function removeItem(index: number) {
+    return () => {
+      if (
+        !confirm(`are you sure you want to remove "${list()[index].name}"?`)
+      ) {
+        return;
+      }
+
+      list.set(list().filter((_, i) => i !== index));
+    };
+  }
+
+  function addItem() {
+    const name = prompt("Enter a name");
+    if (!name) {
+      return;
+    }
+
+    list.set([
+      ...list(),
+      {
+        name,
+        rating: new Rating(),
+      },
+    ]);
+  }
+
   return (
     <main>
       {currentMatch() && (
@@ -175,19 +205,25 @@ export default function Home() {
       </div>
       <div class="py-4 flex gap-3">
         <button
+          onClick={addItem}
+          className="px-3 py-1 border bg-blue-400 hover:bg-blue-500 text-white"
+        >
+          Add
+        </button>
+        <button
           onClick={pasteListFromClipboard}
-          class="px-3 py-1 border bg-gray-100 hover:bg-gray-200"
+          className="px-3 py-1 border bg-gray-100 hover:bg-gray-200"
         >
           Paste List from Clipboard
         </button>
         <button
-          class="px-3 py-1 border bg-gray-100 hover:bg-gray-200"
+          className="px-3 py-1 border bg-gray-100 hover:bg-gray-200"
           onClick={saveRankings}
         >
           Save Rankings
         </button>
         <button
-          class="px-3 py-1 border bg-gray-100 hover:bg-gray-200"
+          className="px-3 py-1 border bg-gray-100 hover:bg-gray-200"
           onClick={loadRankings}
         >
           Load Rankings
@@ -198,6 +234,11 @@ export default function Home() {
           <tr>
             <td>{index + 1}.</td>
             <td>{item.name}</td>
+            <td class="px-2">
+              <button class="text-red-500" onClick={removeItem(index)}>
+                X
+              </button>
+            </td>
             <td class="px-4">mu={item.rating.mu.toFixed(2)}</td>
             <td class="px-4">sigma={item.rating.sigma.toFixed(2)}</td>
           </tr>
