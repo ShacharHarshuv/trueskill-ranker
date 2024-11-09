@@ -68,7 +68,7 @@ export default function Home() {
   });
 
   function pasteListFromClipboard() {
-    if (!confirm("are you sure you want to clear the list?")) {
+    if (list().length && !confirm("are you sure you want to clear the list?")) {
       return;
     }
 
@@ -178,6 +178,46 @@ export default function Home() {
 
   return (
     <main>
+      <h1>Trueskill Ranker</h1>
+      <h2>What is it?</h2>
+      <p>
+        <i>Trueskill ranker</i> is an open-source web app that uses the{" "}
+        <a href="https://en.wikipedia.org/wiki/TrueSkill">
+          truskill ranking system
+        </a>{" "}
+        to help you sort a list of items, by comparing them <b>two at a time</b>
+        . This is an improvement on{" "}
+        <a href="https://elo-ranker.glitch.me/">elo ranker</a> since it
+        prioritizes comparison of items with similar ratings and low
+        "confidence", which effectively means you can get an{" "}
+        <b>accurate rating much faster</b>. It also allows you to add a new item
+        to an already ranked list, and will quickly find its place.
+      </p>
+      <p>
+        You can use it to rank your favorite movies, songs, books, TV shows or
+        even prioritize your tasks or startup ideas!
+      </p>
+      <h2>How to use it?</h2>
+      <p>
+        To start, you can add items either using the "Add" button one at a time,
+        or "Paste List from Clipboard" to add multiple items at once by copying
+        a list where each item is on a separate line (Note! this function will
+        erase your existing list). After adding at least two items you can start
+        rating them by picking your favorite out of two at a time!
+      </p>
+      <p>
+        When you are done, you can save your rankings to a .json file, and later
+        load them in another computer or browser.
+      </p>
+      <h2>Sweet! Can I help?</h2>
+      <p>
+        Sure! Head over the{" "}
+        <a href="https://github.com/ShacharHarshuv/trueskill-ranker">
+          github page
+        </a>{" "}
+        to view the source code and create a pull request! New features are
+        welcome.
+      </p>
       {currentMatch() && (
         <div class="w-full flex gap-3 text-2xl items-center justify-center py-5">
           <button
@@ -195,37 +235,39 @@ export default function Home() {
           </button>
         </div>
       )}
-      <div
-        class="border bg-gray-100 text-center relative"
-        title={confidenceScore().toFixed(2) + "%"}
-      >
-        <span class="absolute">{confidenceScore().toFixed(2) + "%"}</span>
+      {currentMatch() && (
         <div
-          class="bg-green-600 h-5"
-          style={{ width: confidenceScore() + "%" }}
-        ></div>
-      </div>
+          class="border bg-gray-100 text-center relative"
+          title={confidenceScore().toFixed(2) + "%"}
+        >
+          <span class="absolute">{confidenceScore().toFixed(2) + "%"}</span>
+          <div
+            class="bg-green-600 h-5"
+            style={{ width: confidenceScore() + "%" }}
+          ></div>
+        </div>
+      )}
       <div class="py-4 flex gap-3">
         <button
           onClick={addItem}
-          className="px-3 py-1 border bg-blue-400 hover:bg-blue-500 text-white"
+          class="px-3 py-1 border bg-blue-400 hover:bg-blue-500 text-white"
         >
           Add
         </button>
         <button
           onClick={pasteListFromClipboard}
-          className="px-3 py-1 border bg-gray-100 hover:bg-gray-200"
+          class="px-3 py-1 border bg-gray-100 hover:bg-gray-200"
         >
           Paste List from Clipboard
         </button>
         <button
-          className="px-3 py-1 border bg-gray-100 hover:bg-gray-200"
+          class="px-3 py-1 border bg-gray-100 hover:bg-gray-200"
           onClick={saveRankings}
         >
           Save Rankings
         </button>
         <button
-          className="px-3 py-1 border bg-gray-100 hover:bg-gray-200"
+          class="px-3 py-1 border bg-gray-100 hover:bg-gray-200"
           onClick={loadRankings}
         >
           Load Rankings
@@ -236,14 +278,18 @@ export default function Home() {
           <tr>
             <td>{index + 1}.</td>
             <td>{item.name}</td>
-            <td className="px-2">
-              <button class="text-red-500" onClick={removeItem(index)}>
+            <td class="px-2">
+              <button
+                class="text-red-500"
+                onClick={removeItem(index)}
+                title={`Remove "${item.name.trim()}"`}
+              >
                 X
               </button>
             </td>
-            <td className="px-4">mu={item.rating.mu.toFixed(2)}</td>
-            <td className="px-4">sigma={item.rating.sigma.toFixed(2)}</td>
-            <td className="px-4">
+            <td class="px-4">mu={item.rating.mu.toFixed(2)}</td>
+            <td class="px-4">sigma={item.rating.sigma.toFixed(2)}</td>
+            <td class="px-4">
               {(
                 (100 * (sortedList().length - index)) /
                 sortedList().length
