@@ -206,8 +206,14 @@ export default function Home() {
         rating them by picking your favorite out of two at a time!
       </p>
       <p>
-        When you are done, you can save your rankings to a .json file, and later
-        load them in another computer or browser.
+        You can also save your rankings to a .json file, and later load them in
+        another computer or browser.
+      </p>
+      <p>
+        The progress line is a function on average confidence of the rating.
+        Since you can never be 100% accurate, this will never reach a 100%, but
+        approaches it as sigmas approach 0. I found that anything above 50-60%
+        is usually good enough to share.
       </p>
       <h2>Sweet! Can I help?</h2>
       <p>
@@ -215,8 +221,15 @@ export default function Home() {
         <a href="https://github.com/ShacharHarshuv/trueskill-ranker">
           github page
         </a>{" "}
-        to view the source code and create a pull request! New features are
-        welcome.
+        to view the source code and{" "}
+        <a href="https://github.com/ShacharHarshuv/trueskill-ranker/compare">
+          create a pull request
+        </a>
+        ,{" "}
+        <a href="https://github.com/ShacharHarshuv/trueskill-ranker/issues">
+          report a bug or request a new feature
+        </a>
+        ! New features are welcome.
       </p>
       {currentMatch() && (
         <div class="w-full flex gap-3 text-2xl items-center justify-center py-5">
